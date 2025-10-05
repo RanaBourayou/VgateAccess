@@ -1,0 +1,41 @@
+<div class="popup-overlay" *ngIf="visible" (click)="close()">
+  <div class="popup-container" (click)="$event.stopPropagation()">
+    <div class="popup-header">
+      <h3>Status Changed</h3>
+      <button class="close-btn" (click)="close()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="popup-content">
+      <div class="status-change" *ngFor="let change of changes">
+        <div class="visitor-info">
+          <div class="visitor-avatar">
+            {{ change.visitorInitials }}
+          </div>
+          <div class="visitor-details">
+            <strong>{{ change.visitorName }}</strong>
+            <div class="company">{{ change.companyName }}</div>
+          </div>
+        </div>
+        <div class="status-change-info">
+          <div class="old-status">
+            <span>Previous:</span>
+            <span class="status-badge" [ngClass]="change.oldStatus.toLowerCase()">
+              {{ change.oldStatus }}
+            </span>
+          </div>
+          <i class="fas fa-arrow-right"></i>
+          <div class="new-status">
+            <span>New:</span>
+            <span class="status-badge" [ngClass]="change.newStatus.toLowerCase()">
+              {{ change.newStatus }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-footer">
+      <button class="btn-confirm" (click)="close()">OK</button>
+    </div>
+  </div>
+</div>

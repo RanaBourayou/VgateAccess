@@ -1,0 +1,42 @@
+<h2 mat-dialog-title>Edit Supplier</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="supplierForm">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>First Name</mat-label>
+      <input matInput formControlName="firstName">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Last Name</mat-label>
+      <input matInput formControlName="lastName">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Phone</mat-label>
+      <input matInput formControlName="phone">
+    </mat-form-field>
+
+<mat-form-field appearance="fill" class="full-width">
+  <mat-label>Company</mat-label>
+  <mat-select formControlName="companyId">
+    <mat-option *ngFor="let company of companies" [value]="company.idCompany">
+      {{ company.companyName }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="supplierForm.invalid">
+    Save
+  </button>
+</mat-dialog-actions>

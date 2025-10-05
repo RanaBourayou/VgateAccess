@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VGateAccess -   Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+   <app-sidebar-dashboard></app-sidebar-dashboard>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Topbar with Logout Dropdown -->
+        <app-header-dashboard></app-header-dashboard>
+
+        <!-- Content Area -->
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>Dashboard Overview</h1>
+                 
+                </div>
+   
+            </div>
+
+
+<!-- Companies Table -->
+<div class="data-section">
+  <div class="section-header">
+    <div class="section-title">List of Companies</div>
+    <div class="export-actions">
+      <button class="btn btn-outline" (click)="downloadCSV()">
+  <i class="fas fa-file-csv"></i> CSV
+</button>
+<button class="btn btn-outline" (click)="exportCompaniesToPDF()">
+  <i class="fas fa-file-pdf"></i> PDF
+</button>
+
+      <button class="btn btn-secondary" style="color: black;" (click)="openAddCompanyDialog()">
+        <i class="fas fa-plus" style="color: black;"></i> New Company
+      </button>
+    </div>
+</div>
+
+
+
+  <div class="form-card" style="display: flex; gap: 16px; align-items: center; width: 100%; margin-bottom: 0;">
+  <input
+    type="text"
+    class="form-input"
+    placeholder="Search companies..."
+    [(ngModel)]="searchTerm"
+    (ngModelChange)="filterCompanies()"
+    style="flex: 2 1 0; min-width: 180px;"
+  />
+  <select class="form-select" [(ngModel)]="selectedSupplierCount" (change)="filterCompanies()" style="flex: 1 1 0; min-width: 140px;">
+    <option value="">All Supplier Counts</option>
+    <option *ngFor="let count of supplierCounts" [value]="count">{{ count }} Suppliers</option>
+  </select>
+</div>
+
+  <div class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Company Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Address</th>
+          <th>Suppliers</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let company of filteredCompanies">
+          <td>{{ company.companyName }}</td>
+          <td>{{ company.companyEmail || '—' }}</td>
+          <td>{{ company.companyPhone || '—' }}</td>
+          <td>{{ company.companyAddress || '—' }}</td>
+          <td>{{ company.suppliers?.length || 0 }}</td>
+          <td>
+            <div class="table-actions">
+              <button class="action-btn" (click)="editCompany(company)">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-btn secondary" (click)="onDeleteCompany(company.idCompany)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="!isLoading && filteredCompanies.length === 0">
+          <td colspan="6" style="text-align: center;">No companies found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- Pagination Controls -->
+  <div class="pagination-controls" style="display: flex; justify-content: center; align-items: center; margin-top: 16px; gap: 12px;">
+    <button class="btn btn-outline" [disabled]="page === 0 || isLoading" (click)="onPageChange(page - 1)">
+      <i class="fas fa-chevron-left"></i> Previous
+    </button>
+    <span>Page {{ page + 1 }} of {{ totalPages }}</span>
+    <button class="btn btn-outline" [disabled]="page + 1 >= totalPages || isLoading" (click)="onPageChange(page + 1)">
+      Next <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VGateAccess -   Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+   <app-sidebar-dashboard></app-sidebar-dashboard>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Topbar with Logout Dropdown -->
+        <app-header-dashboard></app-header-dashboard>
+
+        <!-- Content Area -->
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>Dashboard Overview</h1>
+                 
+                </div>
+   
+            </div>
+
+
+            <!-- Visits Table -->
+         <div class="data-section">
+  <div class="section-header">
+    <div class="section-title">List of Visit Requests</div>
+    <div class="export-actions">
+<button class="btn btn-outline" (click)="exportCsv()">
+  <i class="fas fa-file-csv"></i> CSV
+</button>
+<button class="btn btn-outline" (click)="exportVisitsToPDF()">
+  <i class="fas fa-file-pdf"></i> PDF
+</button>
+ 
+    </div>
+  </div>
+
+  <!-- Search and Filter Bar -->
+<div class="form-card" style="width: 100%; margin-bottom: 0;">
+  <input
+    type="text"
+    class="form-input"
+    placeholder="Search visits..."
+    [(ngModel)]="searchTerm"
+    (ngModelChange)="filterVisitRequests()"
+    style="flex: 2 1 0; min-width: 180px;"
+  />
+  <select class="form-select" [(ngModel)]="selectedStatus" (change)="filterVisitRequests()" style="flex: 1 1 0; min-width: 140px;">
+    <option value="">All Statuses</option>
+    <option *ngFor="let status of visitStatuses" [value]="status">{{ status }}</option>
+  </select>
+</div>
+
+  <div class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Visitor</th>
+          <th>Requester</th>
+          <th>Visit Date</th>
+          <th>Status</th>
+          <th>Arrival</th>
+          <th>Departure</th>
+          <th>Purpose</th>
+          <th>Actions</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let request of filteredVisitRequests">
+          <td>{{ request.visitor?.firstName }} {{ request.visitor?.lastName }}</td>
+          <td>{{ request.requester?.firstName }} {{ request.requester?.lastName }}</td>
+          <td>{{ request.visitDate | date: 'shortDate' }}</td>
+          <td>{{ request.visitRequestStatus }}</td>
+          <td>{{ request.expectedArrival ? (request.expectedArrival | date: 'shortTime') : '—' }}</td>
+          <td>{{ request.expectedDeparture ? (request.expectedDeparture | date: 'shortTime') : '—' }}</td>
+          <td>{{ request.visitPurpose }}</td>
+          <td>
+            <div class="table-actions">
+              <button class="action-btn" (click)="editVisitRequest(request)">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-btn secondary" (click)="onDeleteVisitRequest(request.idVisitRequest!)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+                                            <td>
+                      <button mat-icon-button color="primary" (click)="openRequestDetail(request.idVisitRequest!)" title="View Details">
+                        <i class="fas fa-info-circle"></i>
+                      </button>
+                    </td>
+        </tr>
+        <tr *ngIf="visitRequests.length === 0">
+          <td colspan="8" style="text-align: center;">No visit requests found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination Controls -->
+  <div class="pagination-controls" *ngIf="totalPages > 1">
+    <button (click)="onPageChange(page - 1)" [disabled]="page === 0">Previous</button>
+    <span>Page {{ page + 1 }} of {{ totalPages }}</span>
+    <button (click)="onPageChange(page + 1)" [disabled]="page + 1 >= totalPages">Next</button>
+  </div>
+</div>

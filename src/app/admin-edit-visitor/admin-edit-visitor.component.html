@@ -1,0 +1,80 @@
+<h2 mat-dialog-title>Edit Visitor</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <div class="form-row">
+      <div class="form-field">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName" />
+        </mat-form-field>
+      </div>
+      <div class="form-field">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" />
+        </mat-form-field>
+      </div>
+      <div class="form-field">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Phone Number</mat-label>
+          <input matInput formControlName="phoneNumber" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>CIN</mat-label>
+          <input matInput type="number" formControlName="cin" />
+        </mat-form-field>
+      </div>
+      <div class="form-field">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Passport Number</mat-label>
+          <input matInput type="number" formControlName="passportNumber" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Visitor Type</mat-label>
+          <mat-select formControlName="visitorType">
+            <mat-option *ngFor="let type of visitorTypes" [value]="type">{{ type }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-field">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Company</mat-label>
+          <mat-select formControlName="companyId">
+            <mat-option *ngFor="let company of companies" [value]="company.idCompany">
+              {{ company.companyName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="form.invalid || loading" (click)="onSubmit()">
+    Save
+  </button>
+</mat-dialog-actions>

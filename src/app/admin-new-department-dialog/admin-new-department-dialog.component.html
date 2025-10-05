@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Management</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <h2>
+                <i class="fas fa-building"></i>
+                Add New Department
+            </h2>
+        </div>
+        
+        <div class="form-container">
+            <form class="form-dialog" (ngSubmit)="onSubmit()" #departmentForm="ngForm" autocomplete="off">
+  <div class="form-group">
+    <label for="departmentName">Department Name</label>
+    <input
+      type="text"
+      id="departmentName"
+      name="name"
+      class="form-control"
+      placeholder="Enter department name"
+      [(ngModel)]="department.name"
+      required
+    />
+    <i class="fas fa-signature form-icon"></i>
+    <span class="floating-label">Department Name</span>
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea
+      id="description"
+      name="description"
+      class="form-control"
+      placeholder="Enter department description"
+      [(ngModel)]="department.description"
+      maxlength="200"
+     ></textarea>
+    <i class="fas fa-align-left form-icon"></i>
+    <div class="character-count">{{ department.description.length || 0 }}/200 characters</div>
+    <span class="floating-label">Description</span>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="btn btn-cancel" (click)="onCancel()">
+      <i class="fas fa-times"></i> Cancel
+    </button>
+    <button
+      type="submit"
+      class="btn btn-submit"
+      [disabled]="!departmentForm.form.valid"
+    >
+      <i class="fas fa-plus"></i> Add Department
+    </button>
+  </div>
+</form>
+
+        </div>
+    </div>
+
+    <script>
+        // Character count for description
+        const description = document.getElementById('description');
+        const charCount = document.querySelector('.character-count');
+        
+        description.addEventListener('input', () => {
+            charCount.textContent = `${description.value.length}/200 characters`;
+        });
+        
+        // Form validation
+        const form = document.querySelector('form');
+        const deptName = document.getElementById('departmentName');
+        
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if(deptName.value.trim() === '') {
+                deptName.style.borderColor = '#f72585';
+                deptName.focus();
+                return;
+            }
+            
+            // Success animation
+            const dialog = document.querySelector('.dialog-container');
+            dialog.style.animation = 'none';
+            setTimeout(() => {
+                dialog.style.animation = 'fadeIn 0.4s ease-out';
+            }, 10);
+            
+            alert('Department added successfully!');
+        });
+        
+        // Reset error state on input
+        deptName.addEventListener('input', () => {
+            if(deptName.value.trim() !== '') {
+                deptName.style.borderColor = '#e2e8f0';
+            }
+        });
+    </script>
+</body>
+</html>

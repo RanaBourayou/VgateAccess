@@ -1,0 +1,80 @@
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Department</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+<body>
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <h2>
+                <i class="fas fa-building"></i>
+                Edit Department
+            </h2>
+        </div>
+        
+        <div class="form-container">
+            <form class="form-dialog" #editForm="ngForm">
+                <div class="form-field-container">
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Department Name</mat-label>
+                        <input matInput name="name" [(ngModel)]="department.name" required>
+                    </mat-form-field>
+                    <i class="fas fa-signature field-icon"></i>
+                </div>
+                
+                <div class="form-field-container">
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput name="description" [(ngModel)]="department.description" rows="3"></textarea>
+                    </mat-form-field>
+                    <i class="fas fa-align-left field-icon"></i>
+                    <div class="character-count">0/200 characters</div>
+                </div>
+                
+                <div class="dialog-actions">
+                    <button mat-button type="button" (click)="onCancel()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button mat-flat-button color="primary" type="submit" [disabled]="!editForm.valid" (click)="onSubmit()">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Character count for description
+        const description = document.querySelector('textarea');
+        const charCount = document.querySelector('.character-count');
+        
+        if(description) {
+            description.addEventListener('input', () => {
+                charCount.textContent = `${description.value.length}/200 characters`;
+            });
+        }
+        
+        // Form validation
+        const form = document.querySelector('form');
+        
+        if(form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Success animation
+                const dialog = document.querySelector('.dialog-container');
+                dialog.style.animation = 'none';
+                setTimeout(() => {
+                    dialog.style.animation = 'fadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                }, 10);
+                
+                alert('Department updated successfully!');
+            });
+        }
+    </script>
+</body>

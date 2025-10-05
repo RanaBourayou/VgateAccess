@@ -1,0 +1,342 @@
+<!-- Angular component template: remove html, head, body tags -->
+  <div class="container">
+    <!-- Compact Header -->
+    <header class="dashboard-header">
+            <div class="header-top">
+                <div class="logo">
+                    <div class="logo-icons">
+                       <img src="assets/images/visteonlogo.png" alt="Visteon Logo">
+                    </div>
+                </div>
+
+ 
+
+        <div class="user-info">
+ 
+
+                    <!-- account container holds profile trigger + dropdown -->
+                    <div class="account-container" (click)="toggleMenu($event)">
+                        <div class="user-profile">
+                            <div class="avatar">{{ firstName.charAt(0) }}{{ lastName.charAt(0) }}</div>
+                            <div class="user-details">
+                                <div class="user-name">{{ firstName }} {{ lastName }}</div>
+                                <div class="user-role">{{ role | titlecase }}</div>
+                            </div>
+                            
+                            <span class="material-icons dropdown-icon" [class.rotate]="menuOpen">expand_more</span>
+                        </div>
+
+                        <div class="dropdown-menu" [class.show]="menuOpen">
+                            <div class="dropdown-arrow"></div>
+              <div class="dropdown-item" (click)="goToAccount()">
+                <span class="material-icons">account_circle</span>
+               </div>
+                            <div class="dropdown-divider"></div>
+              <div class="dropdown-item" (click)="logout()">
+                <span class="material-icons">logout</span>
+                <span>Logout</span>
+              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-title">
+                <p>VGateSystem</p>
+            </div>
+        </header>
+        
+ 
+        <div class="main-flex-layout" style="display: flex; flex-direction: row; align-items: flex-start;">
+          <!-- Sidebar -->
+          <div class="sidebar">
+            <div class="today-date">
+              {{ today }}
+            </div>
+
+            <div class="visit-summary">
+              <h3>Visit Summary</h3>
+              <div class="summary-item">
+                <span>Total visits:</span>
+                <span class="summary-value">{{ summary.total }}</span>
+              </div>
+              <div class="summary-item">
+                <span>Arrivals:</span>
+                <span class="summary-value">{{ summary.arrivals }}</span>
+              </div>
+              <div class="summary-item">
+                <span>Waiting:</span>
+                <span class="summary-value">{{ summary.waiting }}</span>
+              </div>
+              <div class="summary-item">
+                <span>Cancelled:</span>
+                <span class="summary-value">{{ summary.cancelled }}</span>
+              </div>
+            </div>
+
+            <div class="quick-actions">
+              <h3><span class="material-icons">bolt</span> Quick Actions</h3>
+              <div class="action-buttons">
+                <div class="action-btn" 
+                     [class.disabled]="!isWithinAllowedHours()"
+                     [title]="getVisitHoursTitle()"
+                     (click)="isWithinAllowedHours() ? openNewVisitRequestDialog() : null">
+                  <span class="material-icons">event</span>
+                  <span>New Visit Request</span>
+                </div>
+ 
+              </div>
+            </div>
+          </div>
+          <!-- Content Area -->
+          <div class="content-area" style="flex: 1 1 0;">
+            <!-- Main Table Section with Toggle Tabs (CLEANED) -->
+            <div class="table-section">
+              <div class="table-header">
+                <div class="table-tabs">
+                  <button 
+                    [class.active]="activeTable === 'today'"
+                    (click)="setActiveTable('today')"
+                  >
+                    <span class="material-icons">groups</span> Today's Visitors
+                  </button>
+                  <button 
+                    [class.active]="activeTable === 'all'"
+                    (click)="setActiveTable('all')"
+                  >
+                    <span class="material-icons">list</span> All Visits
+                  </button>
+                </div>
+                <div class="search-container">
+                  <span class="material-icons">search</span>
+                  <input type="text" [(ngModel)]="searchTerm" 
+                         (input)="activeTable === 'today' ? filterVisits() : filterAllVisits()"
+                         placeholder="Search by name, company...">
+                  <button (click)="activeTable === 'today' ? filterVisits() : filterAllVisits()">Search</button>
+                </div>
+              </div>
+              <div class="table-container">
+                <!-- Today's Visitors Table -->
+                <table *ngIf="activeTable === 'today'" style="width: 100%;">
+          <thead>
+                    <tr>
+            <th>Visitor</th>
+            <th class="col-company">Company</th>
+            <th>Visit Time</th>
+            <th>Status</th>
+            <th>Notification</th>
+            <th class="col-decision">Decision</th>
+            <th>Departure Time</th>  
+            <th>Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let req of filteredRequests">
+                      <!-- Visitor Info -->
+                      <td data-label="Visitor">
+                        <div class="visitor-info" *ngIf="req.visitor">
+                          <div class="visitor-avatar">
+                            {{ req.visitor.firstName?.charAt(0) }}{{ req.visitor.lastName?.charAt(0) }}
+                          </div>
+                          <div class="visitor-name">
+                            {{ req.visitor.firstName }} {{ req.visitor.lastName }}
+                          </div>
+                        </div>
+                        <ng-container *ngIf="!req.visitor">Not assigned</ng-container>
+                      </td>
+                      <!-- Company -->
+                      <td class="col-company" data-label="Company">{{ req.visitor?.companyName }}</td>
+                      <!-- Arrival Time -->
+                      <td data-label="Visit Time">{{ req.expectedArrival | date:'shortTime' }}</td>
+                      <!-- Status Slider -->
+                      <td data-label="Status">
+                        <div class="status-slider">
+                          <span 
+                            class="status-option"
+                            [class.status-active]="req.visitRequestStatus === status"
+                            *ngFor="let status of [VisitRequestStatus.ARRIVED, VisitRequestStatus.WAITING]"
+                            (click)="setStatus(req, status)">
+                            {{ status }}
+                          </span>
+                        </div>
+                      </td>
+                      <!-- Notify Button -->
+                      <td data-label="Notification">
+                        <button class="btn-notify" 
+                                [class.sent]="notificationStates[req.idVisitRequest!]"
+                                (click)="sendNotification(req, req.visitRequestStatus)">
+                          <span class="material-icons" *ngIf="!notificationStates[req.idVisitRequest!]">notifications</span>
+                          <span class="material-icons" *ngIf="notificationStates[req.idVisitRequest!]">check</span>
+                          {{ notificationStates[req.idVisitRequest!] ? 'Sent' : 'Notify' }}
+                        </button>
+                      </td>
+                      <ng-container *ngIf="['APPROVED', 'REJECTED', 'WAITING', 'PENDING'].includes(req.visitRequestStatus); else emptyCell">
+                        <td class="col-decision" data-label="Decision">
+                          <span class="decision-badge" [ngClass]="req.visitRequestStatus.toLowerCase()">
+                            {{ req.visitRequestStatus }}
+                          </span>
+                        </td>
+                      </ng-container>
+                      <ng-template #emptyCell>
+                        <td class="col-decision" data-label="Decision"></td>
+                      </ng-template>
+                      <td data-label="Departure">
+                        <button
+                          class="btn-departure"
+                          [disabled]="req.visitRequestStatus === 'COMPLETED'"
+                            (click)="markAsDeparted(req)">
+                          <span class="material-icons">door_open</span>
+                          {{ req.visitRequestStatus === 'COMPLETED' ? 'Departed' : 'Mark as Departed' }}
+                        </button>
+                      </td>
+                      <td data-label="Details">
+                        <button class="btn-details" (click)="openRequestDetail(req.idVisitRequest!)" title="View Details">
+                          <span class="material-icons">info</span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- Pagination Controls for Today's Visitors -->
+                <div *ngIf="activeTable === 'today' && todayTotal > todayPageSize" class="pagination-controls">
+                  <button (click)="onTodayPageChange(todayPage - 1)" [disabled]="todayPage === 0">Previous</button>
+                  <span>Page {{ todayPage + 1 }} of {{ todayTotalPages }}</span>
+                  <button (click)="onTodayPageChange(todayPage + 1)" [disabled]="(todayPage + 1) * todayPageSize >= todayTotal">Next</button>
+                </div>
+              </div>
+                <!-- All Visits Table (detailed) -->
+                <div class="table-container" *ngIf="activeTable === 'all'">
+                <table style="width: 100%;">
+          <thead>
+                    <tr>
+            <th>Visitor</th>
+            <th class="col-requester">Requester</th>
+            <th>Visit Date</th>
+            <th>Status</th>
+            <th class="col-arrival">Arrival</th>
+            <th class="col-departure">Departure</th>
+            <th class="col-purpose">Purpose</th>
+            <th>Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+        <tr *ngFor="let request of filteredAllRequests">
+      <td data-label="Visitor">{{ request.visitor?.firstName }} {{ request.visitor?.lastName }}</td>
+      <td class="col-requester" data-label="Requester">{{ request.requester?.firstName }} {{ request.requester?.lastName }}</td>
+          <td data-label="Visit Date">{{ request.visitDate | date: 'shortDate' }}</td>
+          <td data-label="Status">{{ request.visitRequestStatus }}</td>
+      <td class="col-arrival" data-label="Arrival">{{ request.expectedArrival ? (request.expectedArrival | date: 'shortTime') : '—' }}</td>
+      <td class="col-departure" data-label="Departure">{{ request.expectedDeparture ? (request.expectedDeparture | date: 'shortTime') : '—' }}</td>
+      <td class="col-purpose" data-label="Purpose">{{ request.visitPurpose }}</td>
+                     <!-- In the "All Visits" table, update the Details button cell to this: -->
+<td data-label="Details">
+  <button class="btn-details" (click)="openRequestDetail(request.idVisitRequest!)" title="View Details">
+    <span class="material-icons">info</span>
+  </button>
+</td>
+
+                    </tr>
+                    <tr *ngIf="filteredAllRequests.length === 0">
+                      <td colspan="8" style="text-align: center;">No visit requests found.</td>
+                    </tr>
+                  </tbody>
+                </table>
+                </div>
+              <!-- Pagination Controls for All Visits -->
+              <div *ngIf="activeTable === 'all' && allTotal > allPageSize" class="pagination-controls">
+                <button (click)="onAllPageChange(allPage - 1)" [disabled]="allPage === 0">Previous</button>
+                <span>Page {{ allPage + 1 }} of {{ allTotalPages }}</span>
+                <button (click)="onAllPageChange(allPage + 1)" [disabled]="(allPage + 1) * allPageSize >= allTotal">Next</button>
+              </div>
+            </div>
+              </div>
+            </div>
+
+        <!-- Footer -->
+        <div class="footer">
+          </div>
+    </div>
+
+    <script>
+        // Status slider functionality
+        document.querySelectorAll('.status-slider').forEach(slider => {
+            const options = slider.querySelectorAll('.status-option');
+            
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    options.forEach(opt => opt.classList.remove('status-active'));
+                    
+                    // Add active class to clicked option
+                    this.classList.add('status-active');
+                    
+                    // Find the notification button in the same row
+                    const row = this.closest('tr');
+                    const notifyButton = row.querySelector('.btn-notify');
+                    
+                    // Enable/disable notification button based on status
+                   
+                });
+            });
+        });
+        
+        // Notification functionality
+        document.querySelectorAll('.btn-notify').forEach(button => {
+            button.addEventListener('click', function() {
+                if (this.disabled) return;
+                
+                const row = this.closest('tr');
+                const visitorName = row.querySelector('.visitor-name').textContent;
+                const contactPerson = row.querySelector('td:nth-child(4)').textContent;
+                
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = 'notification-toast';
+                notification.innerHTML = `
+                    <div style="position: fixed; bottom: 30px; right: 30px; background: var(--primary); padding: 15px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); z-index: 1000; display: flex; align-items: center; animation: slideIn 0.5s ease-out; border-left: 4px solid var(--secondary); max-width: 350px;">
+            <div style="background: var(--secondary); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+              <span class="material-icons" style="color: white; font-size: 22px;">check</span>
+            </div>
+                        <div>
+                            <h3 style="margin-bottom: 3px; color: var(--accent); font-size: 1.1rem;">Notification sent</h3>
+                            <p style="color: var(--text-light); font-size: 0.9rem;">${contactPerson} has been notified of ${visitorName}'s arrival</p>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Remove notification after 3 seconds
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.5s ease-out forwards';
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 500);
+                }, 3000);
+                
+                // Add animation to the button
+                const originalHTML = this.innerHTML;
+                this.innerHTML = '<span class="material-icons">check</span> Sent';
+                this.style.background = 'linear-gradient(to right, #4ade80, #22c55e)';
+                
+                setTimeout(() => {
+                    this.innerHTML = originalHTML;
+                    this.style.background = 'linear-gradient(to right, var(--secondary), var(--accent))';
+                }, 2000);
+            });
+        });
+        
+         const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>

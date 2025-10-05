@@ -1,0 +1,178 @@
+<div class="create-request-form">
+  <h3>New Visit Request</h3>
+
+  <form [formGroup]="visitForm" (ngSubmit)="onSubmit()" class="inline-form">
+    <!-- Visitor Info -->
+    <div class="form-group">
+      <label>First Name:</label>
+      <input 
+        type="text" 
+        formControlName="firstName"
+        placeholder="First Name">
+    </div>
+
+    <div class="form-group">
+      <label>Last Name:</label>
+      <input 
+        type="text" 
+        formControlName="lastName"
+        placeholder="Last Name">
+    </div>
+
+    <div class="form-group">
+      <label>Visitor Type:</label>
+      <select formControlName="visitorType">
+        <option value="">Select</option>
+        <option value="SUPPLIER">Supplier</option>
+        <option value="INTERN">Intern</option>
+        <option value="CANDIDATE">Candidate</option>
+        <option value="GUEST">Guest</option>
+      </select>
+    </div>
+
+    <div class="form-group" *ngIf="visitForm.get('visitorType')?.value === 'SUPPLIER' || 
+                                  visitForm.get('visitorType')?.value === 'GUEST'">
+      <label>Company Name:</label>
+      <input 
+        type="text" 
+        formControlName="companyName"
+        placeholder="Company Name">
+    </div>
+
+    <div class="form-group">
+      <label>National ID (CIN)/ Passport Number:</label>
+      <input 
+        type="number" 
+        formControlName="cin"
+        placeholder="CIN/Passport">
+    </div>
+
+    <div class="form-group">
+      <label>Phone Number:</label>
+      <input 
+        type="tel" 
+        formControlName="phoneNumber"
+        placeholder="Phone Number">
+    </div>
+
+    <div class="form-group">
+      <label>Email:</label>
+      <input 
+        type="email" 
+        formControlName="email"
+        placeholder="Email">
+    </div>
+
+    <!-- Visit Details -->
+    <div class="form-group">
+      <label>Visit Date:</label>
+      <input 
+        type="date" 
+        formControlName="visitDate"
+        [min]="minDate | date:'yyyy-MM-dd'">
+    </div>
+
+    <div class="form-group">
+      <label>Expected Arrival Time:</label>
+      <input 
+        type="time" 
+        formControlName="expectedArrival">
+    </div>
+
+    <div class="form-group">
+      <label>Expected Departure Time:</label>
+      <input 
+        type="time" 
+        formControlName="expectedDeparture">
+    </div>
+
+    <div class="form-group">
+      <label>Visit Purpose:</label>
+      <input 
+        type="text" 
+        formControlName="visitPurpose"
+        placeholder="Purpose">
+    </div>
+
+    <div class="form-group">
+      <label>Contact Person:</label>
+      <input 
+        type="text" 
+        formControlName="personneConcernee"
+        placeholder="Person to meet">
+    </div>
+
+    <!-- Guests Section -->
+    <div class="form-group">
+      <label>
+        <input 
+          type="checkbox" 
+          formControlName="hasExtraGuests">
+        Will bring additional guests?
+      </label>
+    </div>
+
+    <div class="form-group" *ngIf="visitForm.get('hasExtraGuests')?.value">
+      <label>Number of Guests:</label>
+      <input 
+        type="number" 
+        formControlName="extraGuestCount"
+        min="1">
+    </div>
+
+    <div formArrayName="guests">
+      <ng-container *ngFor="let guest of guests.controls; let i = index">
+        <div [formGroupName]="i" class="guest-form">
+          <h4>Guest #{{i + 1}}</h4>
+          
+          <div class="form-group">
+            <label>First Name:</label>
+            <input 
+              type="text" 
+              formControlName="firstName"
+              placeholder="First Name">
+          </div>
+
+          <div class="form-group">
+            <label>Last Name:</label>
+            <input 
+              type="text" 
+              formControlName="lastName"
+              placeholder="Last Name">
+          </div>
+
+          <div class="form-group">
+            <label>Email:</label>
+            <input 
+              type="email" 
+              formControlName="email"
+              placeholder="Email">
+          </div>
+
+          <div class="form-group">
+            <label>Phone:</label>
+            <input 
+              type="tel" 
+              formControlName="phoneNumber"
+              placeholder="Phone">
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Submit Buttons -->
+    <div class="button-group">
+      <button 
+        type="submit" 
+        [disabled]="visitForm.invalid || isLoading">
+        <span *ngIf="isLoading">Processing...</span>
+        <span *ngIf="!isLoading">Create Request</span>
+      </button>
+      <button 
+        type="button" 
+        (click)="close()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,39 @@
+    <!--header-->
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VGateSystem - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ 
+</head>
+       <!-- Topbar -->
+        <div class="topbar">
+            <div class="search-bar">
+                  
+            </div>
+            <div class="user-actions">
+ 
+     <div class="user-profile dropdown">
+  <div class="user-info-container" (click)="toggleMenu($event)">
+    <div class="user-avatar">{{ firstName.charAt(0) }}{{ lastName.charAt(0) }}</div>
+    <div class="user-info">
+      <div class="user-name">{{ firstName }} {{ lastName }}</div>
+      <div class="user-role">{{ role | titlecase }}</div>
+    </div>
+    <i class="fas fa-chevron-down dropdown-icon" [class.rotate]="menuOpen"></i>
+  </div>
+  
+  <div class="dropdown-menu" [class.show]="menuOpen">
+ 
+    <div class="dropdown-divider"></div>
+    <div class="dropdown-item" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Logout</span>
+    </div>
+  </div>
+</div>
+
+            </div>
+        </div>

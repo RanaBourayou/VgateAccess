@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Verify PIN for {{ data.visitorName }}</h2>
+<form [formGroup]="pinForm" (ngSubmit)="onVerify()">
+  <mat-form-field>
+    <mat-label>Enter PIN Code</mat-label>
+    <input matInput formControlName="pin" maxlength="4" type="text" />
+    <mat-error *ngIf="pinForm.controls['pin'].invalid">
+      PIN must be 2 digits.
+    </mat-error>
+  </mat-form-field>
+  <div mat-dialog-actions>
+    <button mat-button type="submit" [disabled]="pinForm.invalid">Verify</button>
+    <button mat-button (click)="onCancel()">Cancel</button>
+  </div>
+</form>

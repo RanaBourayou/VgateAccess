@@ -1,0 +1,118 @@
+<!-- request-detail.component.html -->
+<div class="detail-container">
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Loading details...</p>
+  </div>
+
+  <div *ngIf="!isLoading && visitRequest" class="detail-card">
+    <div class="card-header">
+      <h2>Visit Request Details</h2>
+      <div class="status-badge" [ngClass]="getStatusClass(visitRequest.visitRequestStatus)">
+        {{ visitRequest.visitRequestStatus }}
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="detail-grid">
+        <div class="detail-section">
+          <h3><i class="fas fa-calendar-alt"></i> Visit Information</h3>
+          <div class="detail-row">
+            <span class="detail-label">Visit Date:</span>
+            <span class="detail-value">{{ visitRequest.visitDate | date:'fullDate' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Arrival Time:</span>
+            <span class="detail-value">{{ visitRequest.expectedArrival | date:'shortTime' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Departure Time:</span>
+            <span class="detail-value">{{ visitRequest.expectedDeparture | date:'shortTime' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Purpose:</span>
+            <span class="detail-value">{{ visitRequest.visitPurpose }}</span>
+          </div>
+ 
+        </div>
+
+        <!-- Visitor Information Section -->
+        <div class="detail-section" *ngIf="visitRequest.visitor">
+          <h3><i class="fas fa-user"></i> Visitor Info</h3>  <!-- Changed heading -->
+          <div class="detail-row">
+            <span class="detail-label">Name:</span>
+            <span class="detail-value">{{ visitRequest.visitor.firstName }} {{ visitRequest.visitor.lastName }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Email:</span>
+            <span class="detail-value">{{ visitRequest.visitor.email }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">CIN:</span>
+            <span class="detail-value">{{ visitRequest.visitor.cin }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Phone:</span>
+            <span class="detail-value">{{ visitRequest.visitor.phoneNumber }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Type:</span>
+            <span class="detail-value">{{ visitRequest.visitor.visitorType }}</span>
+          </div>
+        </div>
+
+        <!-- Additional Guests Section -->
+        <div class="detail-section" *ngIf="visitRequest.additionalGuests?.length > 0">
+          <h3><i class="fas fa-users"></i> Additional Guests</h3>
+          <div *ngFor="let guest of visitRequest.additionalGuests" class="guest-group">
+            <div class="detail-row">
+              <span class="detail-label">Name:</span>
+<span class="detail-value">        {{ guest?.firstName || 'N/A' }} {{ guest?.lastName || 'N/A' }}
+</span>
+            </div>
+            <div class="detail-row" *ngIf="guest.email">
+              <span class="detail-label">Email:</span>
+              <span class="detail-value">{{ guest.email }}</span>
+            </div>
+            <div class="detail-row" *ngIf="guest.phoneNumber">
+              <span class="detail-label">Phone:</span>
+              <span class="detail-value">{{ guest.phoneNumber }}</span>
+            </div>
+            <hr />
+
+            <div class="detail-row">
+              <div class="departure-control">
+                <button mat-stroked-button color="accent"
+                        (click)="markGuestDeparture(guest)"
+                        class="departure-btn">
+                  <i class="fas fa-sign-out-alt"></i>
+                  {{ guest.departure ? 'Update Departure Time' : 'Mark as Departed' }}
+                </button>
+                
+                <span *ngIf="guest.departure" class="departure-time">
+                  Departed at: {{ guest.departure | date:'shortTime' }}
+                </span>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <button mat-raised-button class="close-btn" (click)="dialogRef.close()">
+        <i class="fas fa-times"></i> Close
+      </button>
+
+      <!-- Only visible to ADMIN or REQUESTER -->
+      <div class="action-buttons" *ngIf="userRole === 'ADMIN' || userRole === 'REQUESTER'">
+        <button mat-raised-button color="primary" class="update-btn" (click)="onUpdate()">
+          <i class="fas fa-edit"></i> Update
+        </button>
+        <button mat-raised-button color="warn" class="delete-btn" (click)="onDelete()">
+          <i class="fas fa-trash-alt"></i> Delete
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

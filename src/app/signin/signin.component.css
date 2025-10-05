@@ -1,0 +1,226 @@
+/* styles.css */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #0a192f 0%, #0d1b36 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    color: #ffffff;
+}
+
+.signin-container {
+    background: linear-gradient(135deg, #121f3a 0%, #0e1729 100%);
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 157, 0, 0.2);
+}
+
+.signin-container::before {
+    content: "";
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(255, 157, 0, 0.05);
+    z-index: 0;
+}
+
+.signin-container::after {
+    content: "";
+    position: absolute;
+    bottom: -80px;
+    left: -30px;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: rgba(255, 157, 0, 0.03);
+    z-index: 0;
+}
+
+.logo-container {
+    text-align: left;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 2;
+}
+
+.logo {
+    width: 220px;
+    height: auto;
+    filter: brightness(0) invert(1);
+}
+
+.signin-card {
+    position: relative;
+    z-index: 2;
+}
+
+.signin-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.signin-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.signin-header p {
+    color: #a0aec0;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.form-style {
+    width: 100%;
+    padding: 15px 15px 15px 50px;
+    border: 1px solid #2d3748;
+    border-radius: 10px;
+    background: #1a202c;
+    font-size: 16px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    height: 52px;
+}
+
+.form-style:focus {
+    outline: none;
+    border-color: #ff9d00;
+    background: #1e293b;
+    box-shadow: 0 0 0 3px rgba(255, 157, 0, 0.2);
+}
+
+.form-style::placeholder {
+    color: #718096;
+    font-weight: 400;
+}
+
+.input-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ff9d00;
+    font-size: 20px;
+}
+
+.btn {
+    background: linear-gradient(135deg, #ff9d00 0%, #ff7b00 100%);
+    color: #0a192f;
+    border: none;
+    border-radius: 10px;
+    padding: 16px;
+    width: 100%;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(255, 157, 0, 0.3);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: all 0.4s ease;
+    z-index: -1;
+}
+
+.btn:hover::before {
+    width: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 157, 0, 0.4);
+}
+
+.forgot-password {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.forgot-password a {
+    color: #ff9d00;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.forgot-password a::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #ff9d00;
+    transition: width 0.3s ease;
+}
+
+.forgot-password a:hover::after {
+    width: 100%;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 157, 0, 0.1);
+    color: #718096;
+    font-size: 14px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+    .signin-container {
+        padding: 30px 20px;
+    }
+    
+    .signin-header h2 {
+        font-size: 28px;
+    }
+    
+    .logo {
+        width: 180px;
+    }
+}

@@ -1,0 +1,183 @@
+    <div *ngIf="showCreateRequestForm" class="create-request-form">
+  <h3>New Visit Request for {{ newRequestDate | date:'fullDate' }}</h3>
+
+  <form (ngSubmit)="submitNewRequest()"
+        #requestForm="ngForm"
+        class="inline-form">
+<div class="form-group">
+  <label>Visit Date:</label>
+  <input
+    type="date"
+    [(ngModel)]="newRequest.visitDate"
+    name="visitDate"
+    required />
+</div>
+
+    <div class="form-group">
+      <label>Expected Arrival Time:</label>
+      <input
+        type="time"
+        [(ngModel)]="newRequest.expectedArrival"
+        name="expectedArrival"
+        required />
+    </div>
+
+    <div class="form-group">
+      <label>Expected Departure Time:</label>
+      <input
+        type="time"
+        [(ngModel)]="newRequest.expectedDeparture"
+        name="expectedDeparture"
+        required />
+    </div>
+
+    <div class="form-group">
+      <label>Visit Purpose:</label>
+      <input
+        type="text"
+        [(ngModel)]="newRequest.visitPurpose"
+        name="visitPurpose"
+        required />
+    </div>
+
+
+    <div class="form-group">
+      <label>Visitor First Name:</label>
+      <input
+        type="text"
+        [(ngModel)]="newVisitor.firstName"
+        name="visitorFirstName"
+        required />
+    </div>
+
+    <div class="form-group">
+      <label>Visitor Last Name:</label>
+      <input
+        type="text"
+        [(ngModel)]="newVisitor.lastName"
+        name="visitorLastName"
+        required />
+    </div>
+    <div class="form-group">
+      <label>Visitor Type:</label>
+      <select
+        [(ngModel)]="newVisitor.visitorType"
+        name="visitorType"
+        required>
+        <option [ngValue]="undefined">Select</option>
+        <option [ngValue]="'SUPPLIER'">Supplier</option>
+        <option [ngValue]="'INTERN'">Intern</option>
+        <option [ngValue]="'CANDIDATE'">Candidate</option>
+        <option [ngValue]="'GUEST'">Guest</option>
+      </select>
+    </div>
+
+<div
+  class="form-group"
+  *ngIf="newVisitor.visitorType === 'SUPPLIER' || newVisitor.visitorType === 'GUEST'">
+  <label>Company:</label>
+  <select
+    [(ngModel)]="newVisitor.companyName"
+    name="visitorCompanyId"
+    required>
+    <option [ngValue]="null">-- Select Company --</option>
+    <option *ngFor="let company of companies" [ngValue]="company.idCompany">
+      {{ company.companyName }}
+    </option>
+  </select>
+</div>
+
+    <div class="form-group">
+      <label>National ID (CIN)/ Passport Number:</label>
+      <input
+        type="number"
+        [(ngModel)]="newVisitor.cin"
+        name="visitorCin" />
+    </div>
+
+    <div class="form-group">
+      <label>Phone Number:</label>
+      <input
+        type="tel"
+        [(ngModel)]="newVisitor.phoneNumber"
+        name="visitorPhoneNumber" />
+    </div>
+ <div class="form-group">
+      <label>Visitor Email:</label>
+      <input
+        type="text"
+        [(ngModel)]="newVisitor.email"
+        name="visitorEmail"
+        required />
+    </div>
+
+    <!-- just before your .button-group -->
+<div class="form-group">
+  <label>
+    <input 
+      type="checkbox"
+      [(ngModel)]="hasExtraGuests"
+      name="hasExtraGuests" />
+    Will bring additional guests?
+  </label>
+</div>
+
+<div 
+  class="form-group"
+  *ngIf="hasExtraGuests">
+  <label>Number of Guests:</label>
+  <input
+    type="number"
+    [(ngModel)]="extraGuestCount"
+    name="extraGuestCount"
+    min="1"
+    (change)="buildGuestForms()"/>
+</div>
+<ng-container *ngIf="hasExtraGuests">
+  <div
+    class="form-group"
+    *ngFor="let g of guestForms; let i = index">
+
+    <label>Guest #{{ i+1 }} First Name:</label>
+    <input
+      type="text"
+      [(ngModel)]="guestForms[i].firstName"
+      name="guestFirstName{{i}}"
+      required />
+
+    <label>Guest #{{ i+1 }} Last Name:</label>
+    <input
+      type="text"
+      [(ngModel)]="guestForms[i].lastName"
+      name="guestLastName{{i}}"
+      required />
+
+    <label>Guest #{{ i+1 }} Email:</label>
+    <input
+      type="email"
+      [(ngModel)]="guestForms[i].email"
+      name="guestEmail{{i}}"
+      required />
+
+    <label>Guest #{{ i+1 }} Phone:</label>
+    <input
+      type="tel"
+      [(ngModel)]="guestForms[i].phoneNumber"
+      name="guestPhone{{i}}" />
+
+  </div>
+</ng-container>
+
+
+
+    <div class="button-group">
+      <button type="submit" [disabled]="requestForm.invalid">
+        Create Request
+      </button>
+      <button type="button" (click)="cancelNewRequest()">
+        Cancel
+      </button>
+    </div>
+
+  </form>
+</div>

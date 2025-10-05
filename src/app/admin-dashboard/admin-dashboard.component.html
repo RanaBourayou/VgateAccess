@@ -1,0 +1,264 @@
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VGateAccess - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <app-sidebar-dashboard></app-sidebar-dashboard>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Topbar with Logout Dropdown -->
+        <app-header-dashboard></app-header-dashboard>
+
+        <!-- Content Area -->
+        <div class="content">
+            <div class="page-header">
+ 
+                <div class="page-title">
+                    <h1>Dashboard Overview</h1>
+                    <p>Manage visitor access and monitor activities</p>
+                </div>
+                <div>
+                   <div class="export-actions">
+</div>
+                    <button class="btn btn-secondary" style="color: black;" (click)="openNewRequestDialog()">
+                    <i class="fas fa-plus" style="color: black;"></i> New Visit Request
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <!-- Recent Visits -->
+                <div class="stat-card secondary">
+                    <div class="stat-card-header">
+                        <div>
+                             
+                          <div class="stat-title">
+                <h3>Visitors Currently On Site</h3>
+                <div class="visitors-grid" *ngIf="activeVisitors.length > 0; else noVisitors">
+                    <div class="visitor-card" *ngFor="let visitor of activeVisitors">
+                    <div class="visitor-header">
+                        <div class="visitor-avatar">
+                        {{ visitor.visitor?.firstName | slice:0:1 }}{{ visitor.visitor?.lastName | slice:0:1 }}
+                        </div>
+                        <div class="visitor-info">
+                        <div class="visitor-name">{{ visitor.visitor?.firstName }} {{ visitor.visitor?.lastName }}</div>
+                        <div class="visitor-purpose">{{ visitor.visitPurpose }}</div>
+                        </div>
+                        <div class="visitor-status" [ngClass]="getStatusClass(visitor.visitRequestStatus)">
+                        {{ visitor.visitRequestStatus }}
+                        </div>
+                    </div>
+                    
+                    <div class="visitor-details">
+                        <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>{{ visitor.expectedArrival | date:'shortTime' }}</span>
+                        </div>
+                        <div class="detail-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>{{ visitor.expectedArrival | date:'MMM d' }}</span>
+                        </div>
+                
+                    </div>
+                    
+ 
+    </div>
+  </div>
+  
+  <ng-template #noVisitors>
+    <div class="no-visitors">
+      <i class="fas fa-users-slash"></i>
+      <p>No visitors currently on site</p>
+    </div>
+  </ng-template>
+</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                    </div>
+                </div>
+
+  
+
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filters">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Date Range</label>
+                        <div style="display: flex; gap: 10px;">
+                           <label>Date Range</label>
+                        <div style="display: flex; gap: 10px;">
+            <input
+              type="date"
+              class="filter-control"
+              [(ngModel)]="dateRange.start"
+              (ngModelChange)="onDateChange($event, 'start')"
+            />
+
+            <input
+              type="date"
+              class="filter-control"
+              [(ngModel)]="dateRange.end"
+              (ngModelChange)="onDateChange($event, 'end')"
+            />
+
+                        </div>
+
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Date Filters -->
+                    <div class="filter-group">
+                        <label>Quick Filters</label>
+                        <div>
+                            <button class="btn-filter" (click)="updateDateRange(1)">Today</button>
+                            <button class="btn-filter" (click)="updateDateRange(7)">7 Days</button>
+                            <button class="btn-filter" (click)="updateDateRange(10)">10 Days</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visits Table -->
+            <div class="data-section">
+                <div class="section-header">
+                    <div class="section-title">Recent Visit Requests</div>
+                   <div class="export-actions">
+                <!-- Add this new button for table export -->
+                <button class="btn btn-outline" (click)="exportTableToCSV()">
+                    <i class="fas fa-table"></i> Export Table (CSV)
+                </button>
+                
+                <!-- Keep your existing buttons -->
+                <button class="btn btn-outline" (click)="onExport('csv')">
+                    <i class="fas fa-file-csv"></i> CSV (Full Report)
+                </button>
+                <button class="btn btn-outline" (click)="onExport('pdf')">
+                    <i class="fas fa-file-pdf"></i> PDF (Full Report)
+                </button>
+            </div>
+
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Visitor</th>
+                                <th>Visitor Type</th>
+                                <th>Visit Date</th>
+                                <th>Arrival - Departure</th>
+                                <th>Visit Purpose</th>
+                                <th>Status</th>
+                                <th>Notify</th>
+                                  <th>Departure Time</th>  
+
+                                 <th>Details</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let req of recentRequests">
+                                <td>{{ req.visitor?.firstName }} {{ req.visitor?.lastName }} </td>
+                                <td>{{ req.visitor?.visitorType }}</td>
+                                <td>{{ req.visitDate | date: 'MMM d, y' }}</td>
+                                <td>
+                                    {{ req.visitDate | date: 'hh:mm a' }} - 
+                                    {{ req.expectedDeparture | date: 'hh:mm a' }}
+                                </td>
+                                <td>{{ req.visitPurpose }}</td>
+                                <td>
+                                    <span class="status-badge" 
+                                        [ngClass]="'status-' + req.visitRequestStatus.toLowerCase()">
+                                        {{ formatStatusLabel(req.visitRequestStatus) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn-notify" (click)="sendNotification(req)">
+                                        <i class="fas fa-bell"></i>
+                                    </button>
+                                </td>
+                                                  <td>
+                    <button
+                      class="btn-departure"
+                      [disabled]="req.visitRequestStatus === 'COMPLETED'"
+                        (click)="markAsDeparted(req)">
+                      <i class="fas fa-door-open"></i>
+                      {{ req.visitRequestStatus === 'COMPLETED' ? 'Departed' : 'Mark as Departed' }}
+                    </button>
+                  </td>
+ 
+                                                   <td>
+                      <button mat-icon-button color="primary" (click)="openRequestDetail(req.idVisitRequest!)" title="View Details">
+                        <i class="fas fa-info-circle"></i>
+                      </button>
+                    </td>
+                            </tr>
+                            <tr *ngIf="recentRequests.length === 0">
+                                <td colspan="8" class="no-data">No visit requests found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-grid">
+<!-- admin-dashboard.component.html -->
+<div class="chart-card">
+  <div class="chart-header">
+    <div class="chart-title">Visits by Status</div>
+    <select class="filter-control" style="width: auto;">
+      <option>This Week</option>
+      <option>This Month</option>
+      <option>This Year</option>
+    </select>
+  </div>
+
+  <!-- <- add the "doughnut" class here -->
+  <div class="chart-container doughnut">
+    <canvas id="statusChart"></canvas>
+  </div>
+
+  <div class="chart-legend">
+    <span *ngFor="let status of stats | keyvalue">
+      <span class="legend-color" [style.background]="getStatusColor(status.key)"></span>
+      {{ status.key }} ({{ status.value }})
+    </span>
+  </div>
+</div>
+
+  <div class="chart-card">
+    <div class="chart-header">
+      <div class="chart-title">Visits by Supplier</div>
+      <select class="filter-control" style="width: auto;">
+        <option>This Month</option>
+        <option>This Quarter</option>
+        <option>This Year</option>
+      </select>
+    </div>
+    <div class="chart-container">
+      <canvas id="supplierChart"></canvas>
+      <!-- Add a legend below the chart for clarity -->
+      <div class="chart-legend">
+        <span *ngFor="let supplier of supplierStats | keyvalue">
+          <span class="legend-color" style="background:#4361ee"></span>
+          {{ supplier.key }} ({{ supplier.value }})
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+    </div>
+</body>
+ 

@@ -1,0 +1,168 @@
+<h2 mat-dialog-title>Edit Visit Request</h2>
+<mat-dialog-content>
+  <form [formGroup]="editForm">
+    <div class="form-columns">
+      <!-- Left Column: Visitor Information -->
+      <div class="form-section">
+        <h3 class="section-header">Visitor Information</h3>
+        <fieldset formGroupName="visitor">
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label>First Name*</mat-label>
+            <input matInput formControlName="firstName" required>
+            <mat-error *ngIf="editForm.get('visitor.firstName')?.hasError('required')">
+              First name is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label>Last Name*</mat-label>
+            <input matInput formControlName="lastName" required>
+            <mat-error *ngIf="editForm.get('visitor.lastName')?.hasError('required')">
+              Last name is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label>Email*</mat-label>
+            <input matInput type="email" formControlName="email" required>
+            <mat-error *ngIf="editForm.get('visitor.email')?.hasError('required')">
+              Email is required
+            </mat-error>
+            <mat-error *ngIf="editForm.get('visitor.email')?.hasError('email')">
+              Please enter a valid email
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label>Phone Number</mat-label>
+            <input matInput type="tel" formControlName="phoneNumber">
+          </mat-form-field>
+
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label>Company Name</mat-label>
+            <input matInput formControlName="companyName">
+          </mat-form-field>
+
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label>CIN</mat-label>
+            <input matInput type="number" formControlName="cin">
+          </mat-form-field>
+        </fieldset>
+      </div>
+
+      <!-- Right Column: Visit Details -->
+      <div class="form-section">
+        <h3 class="section-header">Visit Details</h3>
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Visit Date*</mat-label>
+          <input matInput type="date" formControlName="visitDate" required>
+          <mat-error *ngIf="editForm.get('visitDate')?.hasError('required')">
+            Visit date is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Expected Arrival*</mat-label>
+          <input matInput type="time" formControlName="expectedArrival" required>
+          <mat-error *ngIf="editForm.get('expectedArrival')?.hasError('required')">
+            Arrival time is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Expected Departure*</mat-label>
+          <input matInput type="time" formControlName="expectedDeparture" required>
+          <mat-error *ngIf="editForm.get('expectedDeparture')?.hasError('required')">
+            Departure time is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width" appearance="fill">
+          <mat-label>Visit Purpose</mat-label>
+          <input matInput formControlName="visitPurpose" required>
+          <mat-error *ngIf="editForm.get('visitPurpose')?.hasError('required')">
+            Visit purpose is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width" appearance="fill">
+          <mat-label>Visit Status</mat-label>
+          <mat-select formControlName="visitRequestStatus" required>
+            <mat-option value="PENDING">Pending</mat-option>
+            <mat-option value="APPROVED">Approved</mat-option>
+            <mat-option value="REJECTED">Rejected</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+ 
+      </div>
+    </div>
+
+    <!-- Additional Guests Section -->
+    <div class="additional-guests-section">
+      <mat-checkbox formControlName="hasExtraGuests">Include Additional Guests</mat-checkbox>
+
+      <div *ngIf="editForm.get('hasExtraGuests')?.value">
+        <div class="guest-count-control">
+          <mat-form-field appearance="fill">
+            <mat-label>Number of Guests</mat-label>
+            <input matInput type="number" [formControl]="guestCountControl" min="1">
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="updateGuestForms()">Update Guests</button>
+        </div>
+
+        <div formArrayName="additionalGuests">
+          <div *ngFor="let guest of additionalGuests.controls; let i = index" [formGroupName]="i" class="guest-form">
+            <h4>Guest #{{ i + 1 }}</h4>
+            <button mat-raised-button color="warn" (click)="removeGuest(i)" class="delete-guest-btn">
+              Delete
+            </button>
+
+            <div class="guest-form-content">
+              <mat-form-field appearance="fill" class="full-width">
+                <mat-label>First Name*</mat-label>
+                <input matInput formControlName="firstName" required>
+                <mat-error>First name is required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Last Name*</mat-label>
+                <input matInput formControlName="lastName" required>
+                <mat-error>Last name is required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Email*</mat-label>
+                <input matInput type="email" formControlName="email" required>
+                <mat-error>Valid email is required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Phone Number*</mat-label>
+                <input matInput type="tel" formControlName="phoneNumber" required>
+                <mat-error>Phone number is required</mat-error>
+              </mat-form-field>
+              
+              <!-- Guest Time Fields -->
+              <div class="guest-time-fields">
+                <mat-form-field appearance="fill" class="full-width">
+                  <mat-label>Arrival Time</mat-label>
+                  <input matInput type="time" formControlName="arrivalTime">
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="full-width">
+                  <mat-label>Departure Time</mat-label>
+                  <input matInput type="time" formControlName="departureTime">
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="editForm.invalid">Save</button>
+</mat-dialog-actions>

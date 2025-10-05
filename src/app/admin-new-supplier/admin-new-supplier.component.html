@@ -1,0 +1,117 @@
+<div class="form-container">
+  <h2>Add New Supplier</h2>
+  
+  <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="firstName">First Name*</label>
+      <input 
+        type="text" 
+        id="firstName" 
+        formControlName="firstName"
+        placeholder="Enter first name"
+      >
+      <div *ngIf="supplierForm.get('firstName')?.invalid && supplierForm.get('firstName')?.touched"
+           class="error-message">
+        <div *ngIf="supplierForm.get('firstName')?.errors?.['required']">
+          First name is required
+        </div>
+        <div *ngIf="supplierForm.get('firstName')?.errors?.['maxlength']">
+          Maximum 50 characters allowed
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Last Name*</label>
+      <input 
+        type="text" 
+        id="lastName" 
+        formControlName="lastName"
+        placeholder="Enter last name"
+      >
+      <div *ngIf="supplierForm.get('lastName')?.invalid && supplierForm.get('lastName')?.touched"
+           class="error-message">
+        <div *ngIf="supplierForm.get('lastName')?.errors?.['required']">
+          Last name is required
+        </div>
+        <div *ngIf="supplierForm.get('lastName')?.errors?.['maxlength']">
+          Maximum 50 characters allowed
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email*</label>
+      <input 
+        type="email" 
+        id="email" 
+        formControlName="email"
+        placeholder="Enter email"
+      >
+      <div *ngIf="supplierForm.get('email')?.invalid && supplierForm.get('email')?.touched"
+           class="error-message">
+        <div *ngIf="supplierForm.get('email')?.errors?.['required']">
+          Email is required
+        </div>
+        <div *ngIf="supplierForm.get('email')?.errors?.['email']">
+          Invalid email format
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone*</label>
+      <input 
+        type="tel" 
+        id="phone" 
+        formControlName="phone"
+        placeholder="Enter 10-digit phone number"
+      >
+      <div *ngIf="supplierForm.get('phone')?.invalid && supplierForm.get('phone')?.touched"
+           class="error-message">
+        <div *ngIf="supplierForm.get('phone')?.errors?.['required']">
+          Phone is required
+        </div>
+        <div *ngIf="supplierForm.get('phone')?.errors?.['pattern']">
+           digit number required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="company">Company</label>
+      <select 
+        id="company" 
+        formControlName="companyId"
+       >
+        <option [ngValue]="null">Select a company</option>
+        <option *ngFor="let company of companies" [value]="company.idCompany">
+          {{ company.companyName }}
+        </option>
+      </select>
+      <div *ngIf="isLoading" class="loading-text">Loading companies...</div>
+        <div *ngIf="!isLoading && companies.length === 0" class="info-text">
+        No companies available
+        </div>
+
+    </div>
+
+    <div class="form-actions">
+      <button 
+        type="submit" 
+        [disabled]="supplierForm.invalid || isLoading"
+        class="submit-btn"
+      >
+        <span *ngIf="!isLoading">Create Supplier</span>
+        <span *ngIf="isLoading">Creating...</span>
+      </button>
+      <button 
+        type="button" 
+        (click)="router.navigate(['/suppliers'])"
+        class="cancel-btn"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VGateAccess - Department Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <app-sidebar-dashboard></app-sidebar-dashboard>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Topbar -->
+    <app-header-dashboard></app-header-dashboard>
+
+
+    <!-- Department Table -->
+    <div class="data-section">
+      <div class="section-header">
+        <div class="section-title">List of Departments</div>
+        <div class="export-actions">
+          <button class="btn btn-outline" (click)="downloadCSV()">
+          <i class="fas fa-file-csv"></i> Export CSV
+        </button>
+
+          <button class="btn btn-outline" (click)="exportDepartmentsToPDF()">
+          <i class="fas fa-file-pdf"></i> Export PDF
+        </button>
+
+          <button class="btn btn-secondary" (click)="openAddDepartmentDialog()"  >
+            <i class="fas fa-plus"></i> New Department
+          </button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Department Name</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let dept of departments">
+              <td>{{ dept.name }}</td>
+              <td>{{ dept.description }}</td>
+              <td>
+                <div class="table-actions">
+                  <button class="action-btn" (click)="openEditDepartmentDialog(dept)" ><i class="fas fa-edit"></i></button>
+                  <button class="action-btn secondary" (click)="deleteDepartment(dept.idDepartement!)" ><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

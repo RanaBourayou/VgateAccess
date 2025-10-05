@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VGateAccess -   Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+   <app-sidebar-dashboard></app-sidebar-dashboard>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Topbar with Logout Dropdown -->
+        <app-header-dashboard></app-header-dashboard>
+
+        <!-- Content Area -->
+        <div class="content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>Dashboard Overview</h1>
+                 
+                </div>
+   
+            </div>
+
+
+            <!-- Visits Table -->
+            <div class="data-section" style="margin-top: 0; padding-top: 0;">
+                <div class="section-header" style="margin-bottom: 8px;">
+                    <div class="section-title">List of Visitors</div>
+                    <div class="export-actions">
+                      <button class="btn btn-outline" (click)="downloadCSV()">
+                        <i class="fas fa-file-csv"></i> CSV
+                      </button>
+                      <button class="btn btn-outline" (click)="exportVisitorsToPDF()">
+                        <i class="fas fa-file-pdf"></i> PDF
+                      </button>
+                    </div>
+                </div>
+                <div class="form-card" style="margin-bottom: 8px;">
+                  <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Search visitors..."
+                    [(ngModel)]="searchTerm"
+                    (ngModelChange)="filterVisitors()"
+                    style="flex: 2 1 0; min-width: 180px;"
+                  />
+                  <select class="form-select" [(ngModel)]="selectedType" (change)="filterVisitors()" style="flex: 1 1 0; min-width: 140px;">
+                    <option value="">All Types</option>
+                    <option *ngFor="let type of visitorTypes" [value]="type">{{ type }}</option>
+                  </select>
+                </div>
+                <div class="table-container" style="margin-top: 0;">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Company Name</th>
+                        <th>CIN/Passport Number</th>
+                        <th>Visitor Type</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let visitor of filteredVisitors">
+                        <td>{{ visitor.firstName || '—' }}</td>
+                        <td>{{ visitor.lastName || '—' }}</td>
+                        <td>{{ visitor.email || '—' }}</td>
+                        <td>{{ visitor.phoneNumber || '—' }}</td>
+                        <td>{{ visitor.companyName || '—' }}</td>
+                        <td>{{ visitor.cin || '—' }}</td>
+                        <td>{{ visitor.visitorType || '—' }}</td>
+                        <td>
+                          <div class="table-actions">
+                            <button class="action-btn" (click)="openEditVisitor(visitor)">
+                              <i class="fas fa-edit"></i>
+                            </button>
+                            <button
+                              class="action-btn secondary"
+                              *ngIf="visitor.idVisitor !== undefined"
+                              (click)="onDeleteVisitor(visitor.idVisitor!)">
+                              <i class="fas fa-trash"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr *ngIf="visitors.length === 0">
+                        <td colspan="8" style="text-align: center;">No visitors found.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+            <!-- Example pagination controls -->
+<div class="pagination-controls" *ngIf="totalPages > 1">
+  <button (click)="onPageChange(page - 1)" [disabled]="page === 0">Previous</button>
+  <span>Page {{ page + 1 }} of {{ totalPages }}</span>
+  <button (click)="onPageChange(page + 1)" [disabled]="page + 1 >= totalPages">Next</button>
+</div>

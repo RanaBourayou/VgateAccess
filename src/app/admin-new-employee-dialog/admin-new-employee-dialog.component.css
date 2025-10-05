@@ -1,0 +1,177 @@
+body {
+  font-family: 'Poppins', 'Roboto', sans-serif;
+  background: #f5f7fa;
+  color: #222;
+  margin: 0;
+}
+
+.dialog-container {
+  max-width: 540px;
+  margin: auto;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  overflow: hidden;
+}
+
+.dialog-header {
+  background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+  color: #fff;
+  padding: 28px 24px 18px 24px;
+  font-size: 1.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  position: relative;
+  justify-content: center;
+}
+
+.dialog-header i {
+  font-size: 26px;
+}
+
+.dialog-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 5px;
+  width: 100%;
+  background: linear-gradient(90deg, #4cc9f0, #4361ee, #3a0ca3);
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+}
+
+.form-container {
+  padding: 36px 32px 24px 32px;
+  background: #f6f8fa;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  margin-bottom: 22px;
+}
+
+.form-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+mat-label {
+  font-weight: 500;
+  color: #3a0ca3;
+}
+
+input[matInput], mat-select, textarea[matInput] {
+  font-size: 15px;
+  color: #222;
+  background: transparent;
+}
+
+mat-form-field .mat-form-field-wrapper {
+  background: #f9fafb;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+  padding-left: 12px;
+}
+
+mat-form-field.mat-focused .mat-form-field-wrapper {
+  border-color: #4361ee;
+}
+
+mat-error {
+  font-size: 13px;
+  color: #dc2626;
+  margin-top: 4px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 20px 32px 18px;
+  border-top: 1px solid #e5e7eb;
+  background-color: #fff;
+}
+
+button[mat-button] {
+  background: #3a0ca3;
+  color: #fff;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(67, 97, 238, 0.08);
+  border: none;
+}
+
+button[mat-button]:hover {
+  background: #4361ee;
+  color: #ff8c00;
+  box-shadow: 0 6px 18px rgba(67, 97, 238, 0.18);
+}
+
+button[mat-flat-button] {
+  background: linear-gradient(135deg, #ff8c00, #fb923c);
+  color: #fff;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(255, 140, 0, 0.08);
+  border: none;
+}
+
+button[mat-flat-button]:hover {
+  background: linear-gradient(135deg, #fb923c, #ff8c00);
+  color: #3a0ca3;
+  box-shadow: 0 6px 18px rgba(255, 140, 0, 0.18);
+}
+
+button[mat-flat-button]:disabled,
+button[mat-button]:disabled {
+  background: #e5e7eb;
+  color: #a1a1aa;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@media (max-width: 700px) {
+  .dialog-container {
+    max-width: 100%;
+    border-radius: 0;
+  }
+  .form-container {
+    padding: 18px 8px 12px 8px;
+  }
+  .dialog-header {
+    font-size: 1.2rem;
+    padding: 16px 8px 10px 8px;
+  }
+  .dialog-actions {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 8px 8px;
+    gap: 10px;
+  }
+  button {
+    width: 100%;
+  }
+  .form-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
