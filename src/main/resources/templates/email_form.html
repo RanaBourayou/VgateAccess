@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title> Email Sender</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #2684AD 0%, #0B699A 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: linear-gradient(90deg, #7D9EAD 0%, #2684AD 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .card-header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .card-body {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #0C3D60;
+            font-size: 1.1rem;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #0C3D60;
+            font-size: 1.2rem;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #E57200
+        ;
+            box-shadow: 0 0 0 3px rgba(142, 84, 233, 0.2);
+        }
+
+        textarea {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #0C3D60 0%, #0C3D60 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 4px 15px rgba(142, 84, 233, 0.3);
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(142, 84, 233, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn i {
+            margin-right: 10px;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+        }
+
+        .success {
+            background-color: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+
+        .error {
+            background-color: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            .card-header {
+                padding: 20px;
+            }
+
+            .card-body {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1><i class="fas fa-paper-plane"></i> Modern Email Sender</h1>
+        </div>
+
+        <div class="card-body">
+            <form th:action="@{/api/email-requests/api}" th:object="${emailRequest}" method="post">
+                <div class="form-group">
+                    <label>From:</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" th:field="*{from}" placeholder="your.email@example.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>To:</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="email" th:field="*{to}" placeholder="recipient@example.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Subject:</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-tag"></i>
+                        <input type="text" th:field="*{subject}" placeholder="Email subject" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Message:</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-comment-alt"></i>
+                        <textarea th:field="*{message}" placeholder="Write your message here..." required></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">
+                    <i class="fas fa-paper-plane"></i> Send Email
+                </button>
+            </form>
+
+            <div class="message success" th:if="${success}">
+                <i class="fas fa-check-circle"></i> Email sent successfully!
+            </div>
+
+            <div class="message error" th:if="${error}">
+                <i class="fas fa-exclamation-circle"></i> Error: [[${error}]]
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
