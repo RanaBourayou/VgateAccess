@@ -248,12 +248,7 @@ public class MailNotificationService {
                 "    <div class=\"detail-item\">" +
                 "      <div class=\"detail-label\">Company</div>" +
                 "      <div class=\"detail-value\">" + companyName + "</div>" +
-                "    </div>" +
-
-                "    <div class=\"detail-item\">" +
-                "      <div class=\"detail-label\">Contact Person</div>" +
-                "      <div class=\"detail-value\">" + contactPerson + "</div>" +
-                "    </div>" +
+                "    </div>"  +
 
                 "    <div class=\"divider\"></div>" +
 
