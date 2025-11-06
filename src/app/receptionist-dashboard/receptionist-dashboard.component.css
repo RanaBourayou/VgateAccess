@@ -280,9 +280,9 @@ tbody tr:hover {
     box-shadow: 0 6px 14px rgba(0,0,0,0.12);
     }
     .logo-icons {
-        margin-left: 0;
-        width: 56px;
-        height: 36px;
+        margin-left: 10;
+        width: 26px;
+        height: 26px;
         border: 1px solid rgba(255, 107, 0, 0.5);
     }
     .avatar {
@@ -387,20 +387,31 @@ tbody tr:hover {
 
         .logo-icons {
             background: transparent;
-            width: 80px;
-            height: 50px;
+            width: 60px; /* control logo image size here */
+            height: auto;
             margin-left: 4px;
-            border-radius: 12px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 12px;
-            border: 1px solid var(--secondary);
+            border: none;
+            overflow: hidden;
         }
 
-        .logo-icon i {
-            font-size: 22px;
-            color: var(--secondary);
+        /* Ensure logo image is constrained and responsive */
+        .logo img,
+        .logo-icons img {
+            width: 60px;
+            height: auto;
+            display: block;
+        }
+
+        .logo-icons {
+            margin-left: 10px;
+            width: 60px; /* keep consistent with desktop size, image will scale down on small screens */
+            height: auto;
+            border: none;
         }
 
         .logo-text h1 {
@@ -408,7 +419,9 @@ tbody tr:hover {
             font-weight: 700;
             margin-bottom: 3px;
             background: linear-gradient(to right, var(--secondary), var(--accent));
-             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
   
@@ -885,6 +898,11 @@ tbody tr:hover {
             
             .dashboard-title h2 {
                 font-size: 1.5rem;
+            }
+            /* Reduce logo slightly on smaller screens */
+            .logo img,
+            .logo-icons img {
+                width: 48px;
             }
         }
  
