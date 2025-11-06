@@ -32,7 +32,7 @@ public class MailNotificationService {
 
 
     private static final Logger logger = LoggerFactory.getLogger(MailNotificationService.class);
-    @Value("bourayourana8@gmail.com")
+    @Value("mariemhabouria00@gmail.com")
     private String defaultSender;
 
     public MailNotificationService(JavaMailSender mailSender,
@@ -403,7 +403,7 @@ public class MailNotificationService {
                 "    <div class=\"pin-code\">" + pinCode + "</div>" +
                 "    <p>Please provide this code to gain access at the reception.</p>" +
                 "    <div class=\"footer\">" +
-                "      <p>Sent automatically by Visteon Access System</p>" +
+                "      <p>Sent automatically by Deco and Dev Access System</p>" +
                 "    </div>" +
                 "  </div>" +
                 "</body>" +
@@ -425,7 +425,7 @@ public class MailNotificationService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
             helper.setTo(recipientEmail);
-            helper.setSubject("Welcome to Visteon - Your Account Credentials");
+            helper.setSubject("Welcome to Deco and Dev - Your Account Credentials");
             helper.setFrom(defaultSender);
 
             String content = """
@@ -521,7 +521,7 @@ public class MailNotificationService {
 <body>
     <div class="email-container">
         <div class="header">
-            <h1>Visteon Access System</h1>
+            <h1>Deco and Dev Access System</h1>
         </div>
         
         <div class="content">
@@ -529,7 +529,7 @@ public class MailNotificationService {
                 Hello <strong>%s</strong>,
             </div>
             
-            <p>Your account has been successfully created on the Visteon Access System platform.</p>
+            <p>Your account has been successfully created on the Deco and Dev Access System platform.</p>
             
             <div class="credentials-box">
                 <p><span class="label">Email:</span> <span class="highlight">%s</span></p>
@@ -546,7 +546,7 @@ public class MailNotificationService {
              
             <p style="margin-top: 25px;">
                 Best regards,<br>
-                <strong style="color: #003366;">Visteon Security Team</strong>
+                <strong style="color: #003366;">Deco and Dev Security Team</strong>
             </p>
         </div>
         
